@@ -1,28 +1,36 @@
-import java.util.*;
+
 public class Case {
 	
 	private Piece p;
-	private int valeur;
+	private int couleur;
 	private	int[] who_In_Road;
 
 
 	
 	Case(){
+		p = null ;
 		who_In_Road=new int[15];
-		valeur=0;
 	}
 	
-	public int getValeur(){
-		return this.valeur;
+	public Piece getP(){
+		return p;
 	}
 	
-	public void setValeur(int valeur){
-		this.valeur=valeur;
+	public int getId(){
+		if(this.p==null)
+			return -500;
+		else
+			return p.getId();
 	}
+	
+	public void setP(Piece p){
+		this.p=p;
+	}
+	
 	
 	
 	public boolean add_InRoad(int nb){
-		if(nb<0 && nb>=1 && nb<=32){
+		if(nb<0 && nb<=-1 && nb>=-32){
 			int i=0;
 			while(this.who_In_Road[i]<0 && i<15){
 				i++;
@@ -40,7 +48,7 @@ public class Case {
 	
 	
 	public boolean rm_InRoad(int nb){/*remove_InRoad a utilise lors du deplacement d'une piece*/
-		if(nb<0 && nb>=1 && nb<=32){
+		if(nb<0 && nb<=-1 && nb>=-32){
 			int i=0;
 			while(this.who_In_Road[i]!=nb && i<15){
 				i++;
