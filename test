@@ -1,0 +1,37 @@
+    public void Clean_Road2(){
+    	int i=0;
+    	while(i<4){
+    		
+        	int l = this.y;
+        	int c = this.x;
+        	
+			if(i==0)
+				l--;
+			if(i==1)
+				c++;
+			if(i==2)
+				l++;
+			if(i==3)
+				c--;
+        	
+			while(zone_Plateau(c,l) && Plateau.getP(c,l)!=null){
+				if(zone_Plateau(c,l))
+				Plateau.rmInRoad(c,l,-this.id);
+				if(i==0)
+					l--;
+				if(i==1)
+					c++;
+				if(i==2)
+					l++;
+				if(i==3)
+					c--;
+			}		    			
+			
+			if(zone_Plateau(c,l) && Plateau.getP(c,l)!=null){
+    			Plateau.rmInRoad(c,l,-this.id);
+			}	
+
+    		i++;
+    	}/*end for*/
+    	 	
+    }/*end Clean_Road*/
