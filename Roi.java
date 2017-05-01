@@ -1,5 +1,3 @@
-import com.modeliosoft.modelio.javadesigner.annotations.objid;
-
 
 public class Roi extends Piece {
 
@@ -9,7 +7,7 @@ public class Roi extends Piece {
     //protected int color;
 	
     public Roi(){
-    	this.id=-98;
+    	super();
     }
     
     public Roi(int id,int x,int y){
@@ -28,36 +26,62 @@ public class Roi extends Piece {
         	}
        }
     
+    public Roi(int id){
+    	if(id==5 || id==29){
+    		this.id=id;
+    		if(id==5 ){
+    			this.color=0;
+    			this.x=4;
+    			this.y=0;
+    			addWhite();
+    			this.Make_Road();
+    			Plateau.setCase(4,0,this);
+    		}
+    		else if(id==29){
+    			this.color=1;
+    			this.x=4;
+    			this.y=7;
+    			addBlack();
+    			this.Make_Road();
+    			Plateau.setCase(4,7,this);
+    		}
+    	}
+   }
+    
     public int getId() {
         return this.id;
     }
     
-    public boolean Mouvement(int x,int y,Case[][]tab){
-    	
-    	if(x==this.x && y==this.y || (zone_Plateau(x,y)==false))
-    		return false;
-    	
-    	if(sous_Pos(this.x,x)==1 || sous_Pos((this.y+1),(y+1))==1 
-    			||
-    	(sous_Pos(this.x,x)==1 && sous_Pos((this.y+1),(y+1))==1)  
-    	&&
-    	(ennemi_Road(x,y,tab)==false) 
-    	&&
-    	( Mangeable(this.id,tab[y][x].getId())||tab[y][x].getP()==null )  ){
-    		tab[y][x].setP(tab[this.y][this.x].getP());
-    		Clean_Road(tab);
-    		this.setX(x);
+	public boolean Mouvement(int x, int y/*,Plateau tab*/) {/*suspendu*/
+		if((zone_Plateau(x,y)==false) || (x==this.x && y==this.y)){
+			System.out.println("C'est 1");
+			return false;
+		}
+		if((Mangeable(this.id,Plateau.getId(x,y)) && (Plateau.here_Or_No(x,y,-this.id)) && (ennemi_Road(x,y)==false) )
+				||
+			((Plateau.getP(x,y)==null) && (Plateau.here_Or_No(x,y,-this.id)) && (ennemi_Road(x,y)==false) ) ){
+    		
+			if(Mangeable(this.id,Plateau.getId(x,y)) && (Plateau.getP(x,y)!=null)){
+				Plateau.Death(x,y);
+			}
+			
+			Plateau.NettoyagePlateau();
+    		Plateau.setCase(x,y,this);
+    		Clean_Road(1);
+    		this.setX(x);				
     		this.setY(y);
-    		Make_Road(tab);
+    		Plateau.MiseAJour();
     		return true;
-    	}
-    	else return false;
-    	
-    }
+		}
+		else {
+			System.out.println("C'est 2");
+			return false;
+		}
+	}
     
     
     
-    public void Clean_Road(Case[][] tab){
+    public void Clean_Road(int t){
     	int i=0;
     	while(i<2){
     		
@@ -75,27 +99,27 @@ public class Roi extends Piece {
         		}
 		    			while(z<3){
 		    				if(zone_Plateau(c,l))
-		    				tab[l][c].rm_InRoad(-this.id);
-		    				if(i==0)
+		    				Plateau.rmInRoad(c,l,-this.id);
+		    				if(i==0 && z<2)
 		    					l++;
-		    				if(i==1)
+		    				if(i==1 && z<2)
 		    					l--;
 		    				z++;
 		    				if(z==3){
 		    					if(i==0 && zone_Plateau(c,l)){
 		    						c--;
-				    				tab[l][c].rm_InRoad(-this.id);
+				    				Plateau.rmInRoad(c,l,-this.id);
 		    						}
 		    					if(i==1 && zone_Plateau(c,l)){
 		    						c++;
-				    				tab[l][c].rm_InRoad(-this.id);
+				    				Plateau.rmInRoad(c,l,-this.id);
 		    					}
 		    				}/*end if z==3*/
 
 		    			}/*end while*/
 		    			i++;
-		    		    if(i==2){/*Pour retirer l'identifiant de l'ancienne position*/
-		    		    	tab[this.y][this.x].setP(null);
+		    		    if(i==2 && t==1){/*Pour retirer l'identifiant de l'ancienne position*/
+		    		    	Plateau.setCase(this.x,this.y,null);
 		    		    }
     	}/*end big while*/
     	 	
@@ -103,7 +127,7 @@ public class Roi extends Piece {
     
     
     
-    public void Make_Road(Case[][] tab){
+    public void Make_Road(){
     	int i=0;
     	while(i<2){
     		
@@ -121,20 +145,22 @@ public class Roi extends Piece {
         		}
 		    			while(z<3){	
 		    				if(zone_Plateau(c,l))
-		    				tab[l][c].add_InRoad(-this.id);
-		    				if(i==0)
+		    				Plateau.addInRoad(c,l,-this.id);
+		    				if(i==0 && z<2)
 		    					l++;
-		    				if(i==1)
+		    				if(i==1 && z<2)
 		    					l--;
 		    				z++;
 		    				if(z==3){
 		    					if(i==0 && zone_Plateau(c,l)){
 		    						c--;
-				    				tab[l][c].add_InRoad(-this.id);
+
+				    				Plateau.addInRoad(c,l,-this.id);
 		    						}
 		    					if(i==1 && zone_Plateau(c,l)){
 		    						c++;
-				    				tab[l][c].add_InRoad(-this.id);
+
+				    				Plateau.addInRoad(c,l,-this.id);
 		    					}
 		    				}/*end if z==3*/
 
@@ -144,36 +170,9 @@ public class Roi extends Piece {
     	 	
     }/*end Clean_Road*/
     
+public boolean Danger(){
+	return ennemi_Road(this.x,this.y);
+}
     
-   public boolean ennemi_Road(int x,int y,Case[][]tab){/*Renvoie true si cette Case est sur le chemin d'un ennemie et false sinon utile pour savoir si une piece est proteger par une autre ou non*/
-    	
-    	if((zone_Plateau(x,y)==false))
-    			return false;
-    		
-    	if(this.id>=17 && this.id<=32){/*ForBlack*/
-        	int i=-1;
-    		while(i>-16 && tab[y][x].here_Or_Not(i)){
-    			i--;
-    		}
-    		if(tab[y][x].here_Or_Not(i))
-    			return true;
-    		else 
-    			return false;
-    	}
-    	
-    	
-    	else if(this.id>=1 && this.id<=16){/*ForWhite*/
-    		int i=-17;
-    		while(i>-32 && tab[y][x].here_Or_Not(i)){
-    			i--;
-    		}
-    		if(tab[y][x].here_Or_Not(i))
-    			return true;
-    		else 
-    			return false;
-    	}
-    	
-    	else return false;
-    }/*end ennemi_Road*/
-
+    
 }/*end class Roi*/

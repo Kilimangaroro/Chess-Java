@@ -1,4 +1,3 @@
-import com.modeliosoft.modelio.javadesigner.annotations.objid;
 
 
 public class Fou extends Piece {
@@ -9,7 +8,7 @@ public class Fou extends Piece {
     //protected int color;
     
     public Fou(){
-    	this.id=-98;
+    	super();
     }
     
     public Fou(int id,int x,int y){
@@ -31,94 +30,90 @@ public class Fou extends Piece {
     
 
 
-    public Fou(int id,Case[][]tab){
-    	if(id==3 || id==6 || id==27 || id==30 ){
-	    	this.id=id;
-	    	
-	    		if(id==3 || id==6){
-	    			addWhite();
-	    			color=0;
-	    			if(id==3){
-	    				this.x=4;
-	    				this.y=0;
-	    				Mouvement(this.x,this.y,tab);
-	    			}
-	    			if(id==6){
-	    				this.x=7;
-	    				this.y=0;
-	    				Mouvement(this.x,this.y,tab);
-	    			}
-	    		}
-	    		
-	    		else{
-	    			addBlack();
-	    			color=1;
-	    			if(id==27){
-	    				this.x=4;
-	    				this.y=7;
-	    				Mouvement(this.x,this.y,tab);
-	    			}
-	    			if(id==30){
-	    				this.x=7;
-	    				this.y=7;
-	    				Mouvement(this.x,this.y,tab);
-	    			}
-	    		}
-	    }
-    }
-    
-    
-    
-    
-    
-    public boolean Mouvement(int x,int y,Case[][]tab){
-    	if(x==this.x && y==this.y || (zone_Plateau(x,y)==false))
-    		return false;
+    public Fou(int id){
     	
-    		int HD = moveLimit(0,tab);
-    		int HD2=HD*-1;/*negatif*/
-    		
-    		int BD = moveLimit(1,tab);
-    		//int BD2 = BD*-1;/*negatif*/
-    		
-    		int BG = moveLimit(2,tab);
-    		int BG2 = BG*-1;/*negatif*/
-    		
-    		int HG = moveLimit(3,tab);
-    		int HG2 = HG*-1;/*negatif*/
-    		
-    	if(  
-    		(x<=this.x+HD && x>this.x) && (y>=this.y+HD2 && y<this.y) && (x-this.x==(this.y+1)-(y+1) ) /*Haut Droite*/
-    			|| 
-    		(x<=this.x+BD && x>this.x) && (y<=this.y+BD && y>this.y) && (x-this.x==(y+1)-(this.y+1) )/*Bas Droite*/
-    			||
-    		(x>=this.x+BG2 && x<this.x) && (y<=this.y+BG && y>this.y) && (this.x-x==(y+1)-(this.y+1) )/*Bas Gauche*/
-    			||
-    		(x>=this.x+HG2 && x<this.x) && (y>=this.y+HG2 && y<this.y) && (this.x-x==(this.y+1)-(y+1))/*Haut Gauche*/
-    	){
-    		tab[y][x].setP(tab[this.y][this.x].getP());
-    		Clean_Road(tab);
-    		this.setX(x);
-    		this.setY(y);
-    		Make_Road(tab);
-    		return true;
+    	if(id==2){
+    		this.id=id;
+    		this.x=2;
+    		this.y=0;
+    		this.color=0;
+    		addWhite();
+    		this.Make_Road();
+    		Plateau.setCase(2,0,this);
     	}
-    	else 
-    		return false;
-    		
     	
+    	else if(id==7){
+    		this.id=id;
+    		this.x=5;
+    		this.y=0;
+    		this.color=0;
+    		addWhite();
+    		this.Make_Road();
+    		Plateau.setCase(5,0,this);
+    	}
+
+
+    	else if(id==26){
+    		this.id=id;
+    		this.x=2;
+    		this.y=7;
+    		this.color=1;
+    		addBlack();
+    		this.Make_Road();
+    		Plateau.setCase(2,7,this);
+    	}
     	
+    	else if(id==31){		    			
+    		this.id=id;
+    		this.x=5;
+    		this.y=7;
+    		this.color=1;
+    		addBlack();
+    		this.Make_Road();
+    		Plateau.setCase(5,7,this);
+    	}
     }
     
     
     
     
     
+	public boolean Mouvement(int x, int y/*,Plateau tab*/) {/*suspendu*/
+		if((zone_Plateau(x,y)==false) || (x==this.x && y==this.y)){
+			System.out.println("C'est 1");
+			return false;
+		}
+		if((Mangeable(this.id,Plateau.getId(x,y)) && (Plateau.here_Or_No(x,y,-this.id)) )
+				||
+			((Plateau.getP(x,y)==null) && (Plateau.here_Or_No(x,y,-this.id))) ){
+    		
+			if(Mangeable(this.id,Plateau.getId(x,y)) && (Plateau.getP(x,y)!=null)){
+				Plateau.Death(x,y);
+			}
+			
+			Plateau.NettoyagePlateau();
+    		Plateau.setCase(x,y,this);
+    		Clean_Road(1);
+    		this.setX(x);				
+    		this.setY(y);
+    		Plateau.MiseAJour();
+    		return true;
+		}
+		else {
+			System.out.println("C'est 2");
+			return false;
+		}
+	}
     
     
     
     
-    public void Make_Road(Case[][]tab){
+    
+    
+    
+    
+    
+    public void Make_Road(){
 
     	int i=0;
     	while(i<4){
@@ -126,7 +121,8 @@ public class Fou extends Piece {
         	int l = this.y;
         	int c = this.x;
         	
-    		while(tab[l][c].getP()==null && zone_Plateau(c,l)){
+    		do{
+
 				if(i==0){/*Haut droite*/
 					l--;
 					c++;
@@ -143,23 +139,14 @@ public class Fou extends Piece {
 					c--;
 					l--;
 				}
-    			tab[l][c].add_InRoad(-this.id);
-    		}/**/
+				if(zone_Plateau(c,l))
+	    		Plateau.addInRoad(c,l,-this.id);
+
+    		}while(zone_Plateau(c,l)&&Plateau.getP(c,l)==null);
     		
-			if(tab[l][c].getP()!=null){
-    				if(i==0){
-    	    			tab[l][c].add_InRoad(-this.id);
-    				}
-    				if(i==1){
-    	    			tab[l][c].add_InRoad(-this.id);
-    				}
-    				if(i==2){
-    	    			tab[l][c].add_InRoad(-this.id);
-    				}
-    				if(i==3){
-    	    			tab[l][c].add_InRoad(-this.id);
-    				}
-			}/* */
+			if(zone_Plateau(c,l) && Plateau.getP(c,l)!=null){
+    	    	Plateau.addInRoad(c,l,-this.id);
+			}/**/
 			
     		i++;
     	}/*end while*/
@@ -168,18 +155,16 @@ public class Fou extends Piece {
     
     
     
-    
-    
-    
-    public void Clean_Road(Case[][]tab){
+    public void Clean_Road(int t){
 
     	int i=0;
     	while(i<4){
     		
-        	int l = this.y;
-        	int c = this.x;
-    		
-    		while(tab[l][c].getP()==null && zone_Plateau(c,l)){
+        int l = this.y;
+        int c = this.x;
+        	
+    		do{
+    			
 				if(i==0){/*Haut droite*/
 					l--;
 					c++;
@@ -196,98 +181,23 @@ public class Fou extends Piece {
 					c--;
 					l--;
 				}
-    			tab[l][c].rm_InRoad(-this.id);
-    		}/**/
+				
+			if(zone_Plateau(c,l))
+		    Plateau.rmInRoad(c,l,-this.id);
+    		}while(zone_Plateau(c,l)&&Plateau.getP(c,l)==null);
     		
-			if(tab[l][c].getP()!=null){
-    				if(i==0){
-    	    			tab[l][c].rm_InRoad(-this.id);
-    				}
-    				if(i==1){
-    	    			tab[l][c].rm_InRoad(-this.id);
-    				}
-    				if(i==2){
-    	    			tab[l][c].rm_InRoad(-this.id);
-    				}
-    				if(i==3){
-    	    			tab[l][c].rm_InRoad(-this.id);
-    				}
-					
-				}/*end if*/	
-			
-			
+			if(zone_Plateau(c,l) && Plateau.getP(c,l)!=null){
+    	    	Plateau.rmInRoad(c,l,-this.id);
+			}/**/
+
     		i++;
-		    if(i==4){/*Pour retirer l'identifiant de l'ancienne position*/
-		    	tab[this.y][this.x].setP(null);
+		    if(i==4 && t==1){/*Pour retirer l'identifiant de l'ancienne position*/
+		    	Plateau.setCase(this.x,this.y,null);
 		    }
     	}/*end while*/
     	
-    }/*end Clean_Road*/
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    public int moveLimit(int i,Case[][]tab){
-    	int l=this.y;
-    	int c=this.x;
-    	int compteur=0;
-
-    		while(tab[l][c].getP()==null && zone_Plateau(c,l)){
-				if(i==0){/*Haut droite*/
-					compteur++;
-					l--;
-					c++;
-				}
-				if(i==1){/*Bas Droite*/
-					compteur++;
-					c++;
-					l++;
-				}
-				if(i==2){/*Bas Gauche*/
-					compteur++;
-					l++;
-					c--;
-				}
-				if(i==3){/*Haut Gauches*/
-					compteur++;
-					c--;
-					l--;
-				}
-    		}/**/
-    		
-			if(tab[l][c].getP()!=null){
-				if(Mangeable(this.id,tab[l][c].getId()) ){
-    				if(i==0){
-	    				compteur++;
-    				}
-    				if(i==1){
-	    				compteur++;	
-    				}
-    				if(i==2){
-	    				compteur++;
-    				}
-    				if(i==3){
-	    				compteur++;
-    				}
-					
-				}/*end if*/
-					
-			}/* */
-
-	if( (zone_Plateau(c,l)==false) ){
-			compteur=0;
-	}
-	return compteur;
-
-    	
-    }/*end moveLimit*/
-    
-    
-    
+    }/*end Make_Road*/
+     
 
 }/*end class Fou*/
+
