@@ -11,8 +11,11 @@ public class Fou extends Piece {
     	super();
     }
     
-    public Fou(int id,int x,int y){
-    	if(id==3 || id==6 || id==27 || id==30 ){
+    public Fou(int id,int x,int y)
+    throws BadIdException,BadXYException {
+    	
+if(id==3 || id==6 || id==27 || id==30 ){
+    		this.move=0;
     		this.id=id;
     		this.x=x;
     		this.y=y;
@@ -24,54 +27,68 @@ public class Fou extends Piece {
     			this.color=1;
     			addBlack();
     		}
+    		
+			   if(zone_Plateau(x,y)){
+	 			   	this.Make_Road();
+			   		Plateau.setCase(x, y, this);
+			   		}
+			   else
+		    		throw new BadXYException();
     	}
+    	else
+    		throw new BadIdException();
    }
 
     
 
 
-    public Fou(int id){
-    	
-    	if(id==2){
-    		this.id=id;
-    		this.x=2;
-    		this.y=0;
-    		this.color=0;
-    		addWhite();
-    		this.Make_Road();
-    		Plateau.setCase(2,0,this);
+    public Fou(int id)
+    		throws BadIdException{
+    	if(id==3 || id==6 || id==27 || id==30 ){
+    		this.move=0;
+			    	if(id==3){
+			    		this.id=id;
+			    		this.x=2;
+			    		this.y=0;
+			    		this.color=0;
+			    		addWhite();
+			    		this.Make_Road();
+			    		Plateau.setCase(2,0,this);
+			    	}
+			    	
+			    	else if(id==6){
+			    		this.id=id;
+			    		this.x=5;
+			    		this.y=0;
+			    		this.color=0;
+			    		addWhite();
+			    		this.Make_Road();
+			    		Plateau.setCase(5,0,this);
+			    	}
+			
+			
+			    	else if(id==27){
+			    		this.id=id;
+			    		this.x=2;
+			    		this.y=7;
+			    		this.color=1;
+			    		addBlack();
+			    		this.Make_Road();
+			    		Plateau.setCase(2,7,this);
+			    	}
+			    	
+			    	else if(id==30){		    			
+			    		this.id=id;
+			    		this.x=5;
+			    		this.y=7;
+			    		this.color=1;
+			    		addBlack();
+			    		this.Make_Road();
+			    		Plateau.setCase(5,7,this);
+			    	}
     	}
-    	
-    	else if(id==7){
-    		this.id=id;
-    		this.x=5;
-    		this.y=0;
-    		this.color=0;
-    		addWhite();
-    		this.Make_Road();
-    		Plateau.setCase(5,0,this);
-    	}
-
-
-    	else if(id==26){
-    		this.id=id;
-    		this.x=2;
-    		this.y=7;
-    		this.color=1;
-    		addBlack();
-    		this.Make_Road();
-    		Plateau.setCase(2,7,this);
-    	}
-    	
-    	else if(id==31){		    			
-    		this.id=id;
-    		this.x=5;
-    		this.y=7;
-    		this.color=1;
-    		addBlack();
-    		this.Make_Road();
-    		Plateau.setCase(5,7,this);
-    	}
+    	else
+    		throw new BadIdException();
     }
     
     
@@ -80,7 +97,7 @@ public class Fou extends Piece {
     
 	public boolean Mouvement(int x, int y/*,Plateau tab*/) {/*suspendu*/
 		if((zone_Plateau(x,y)==false) || (x==this.x && y==this.y)){
-			System.out.println("C'est 1");
+			System.out.println("Ces coordonées son hors des limites du plateau ou ne deplace pas la piece");
 			return false;
 		}
 		if((Mangeable(this.id,Plateau.getId(x,y)) && (Plateau.here_Or_No(x,y,-this.id)) )
@@ -93,6 +110,7 @@ public class Fou extends Piece {
 			
 			Plateau.NettoyagePlateau();
     		Plateau.setCase(x,y,this);
+    		this.move+=1;
     		Clean_Road(1);
     		this.setX(x);				
     		this.setY(y);
@@ -100,7 +118,7 @@ public class Fou extends Piece {
     		return true;
 		}
 		else {
-			System.out.println("C'est 2");
+			System.out.println("Ce mouvement n'est pas possible actuellement");
 			return false;
 		}
 	}

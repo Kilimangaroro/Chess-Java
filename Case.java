@@ -26,10 +26,21 @@ public class Case {
 	
 	
     public void Death(){
-    	if(p!=null){
-    	p.Clean_Road(1);
+    	
+      if(p!=null){
+    		
+    		if(p.getId()>=1 && p.getId()<=16){
+    			p.lessWhite();
+    			p.Clean_Road(1);
+    		}
+    		
+    		else if(p.getId()>=17 && p.getId()<=32){
+    			p.lessBlack();
+    			p.Clean_Road(1);
+    		}
+    		
     	}
-    }
+   }
 	
 	public int getCouleurCase(){
 		return this.couleur;
@@ -37,6 +48,14 @@ public class Case {
 	
 	public void setCouleurCase(int i){/*0:Blanc 1:Noir*/
 		this.couleur=i;
+	}
+	
+	public int getMove(){
+		return p.getMove();
+	}
+	
+	public boolean getMouvement(int x,int y){
+		return p.Mouvement(x, y);
 	}
 	
 	public int getCaseId(){
@@ -57,11 +76,11 @@ public class Case {
 	
 	
 	public int getId(){
-		int re=-1000;
-		if(this.p!=null){
-		return p.getId();}
+		
+		if(this.p!=null)
+			return p.getId();
 		else 
-			return re;
+			return 0;
 	}
 	
 	public void Clean(){

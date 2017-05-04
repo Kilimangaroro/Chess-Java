@@ -12,17 +12,43 @@ public class Cavalier extends Piece {
     	super();
     }
     
-    public Cavalier(int id,int x,int y,int color){
-    	this.id=id;
-    	this.x=x;
-    	this.y=y;
-    	this.color=color;
+    public Cavalier(int id,int x,int y)
+    throws BadIdException,BadXYException{
     	
+ if(id==2 || id==7 || id==26 || id==31){
+			    	this.id=id;
+			    	this.x=x;
+			    	this.y=y;
+			    	this.move=0;
+			    	
+			    	if(id>=1&&id<=16){
+			    		this.color=0;
+			    		addWhite();
+			    	}
+			    	if(id>=17&&id<=32){
+			    		this.color=1;
+			    		addBlack();
+			    	}
+			    	
+			    	
+		 			   if(zone_Plateau(x,y)){
+		 	 			   	this.Make_Road();
+		 			   		Plateau.setCase(x, y, this);
+		 			   		}
+		 			   else
+		 		    		throw new BadXYException();
+				   
+    	}
+    	else
+    		throw new BadIdException();
     }
 
     
-    public Cavalier(int id){
-
+    public Cavalier(int id)
+    throws BadIdException {
+    	
+    	if(id==2 || id==7 || id==26 || id==31){
+    	this.move=0;
 	    			if(id==2){
 	    				this.id=id;
 	    				this.x=1;
@@ -62,6 +88,9 @@ public class Cavalier extends Piece {
 		    			this.Make_Road();
 	    				Plateau.setCase(6,7,this);
 	    			}
+    	}
+    	else
+    		throw new BadIdException();
 
     }
     
@@ -78,6 +107,7 @@ public class Cavalier extends Piece {
 			
 			Plateau.NettoyagePlateau();
     		Plateau.setCase(x,y,this);
+    		this.move+=1;
     		Clean_Road(1);
     		this.setX(x);				
     		this.setY(y);
@@ -90,7 +120,7 @@ public class Cavalier extends Piece {
 		}
 	}
 
-	@Override
+	//@Override
 	public void Make_Road(/*Plateau tab*/) {
 		int c,l,ybis,xbis;
 		int i=0;

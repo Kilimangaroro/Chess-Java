@@ -1,8 +1,9 @@
+//import java.util.ArrayList;
 
 public class Plateau {
 
     protected static Case Tab2D[][];
-    
+    //ArrayList<Case> Save;
 
 
     public Plateau (){
@@ -19,6 +20,14 @@ public class Plateau {
     	}
     	Tab2D[0][0].setEch(this);
     }
+    
+	public static boolean getMouvement(int x,int y,int px,int py){
+		return Tab2D[y][x].getMouvement(px,py);
+	}
+    
+	public static int getMove(int x , int y){
+		return Tab2D[y][x].getMove();
+	}
     
 	public static void setCaseId(int x,int y,int ident){
 		Tab2D[y][x].setCaseId(ident);

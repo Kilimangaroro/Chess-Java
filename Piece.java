@@ -7,6 +7,7 @@ public abstract class Piece {
     protected int x;
     protected int y;
     protected int color;/*Blanc=0 Noir=1*/
+	protected int move;
     protected static Plateau ech;
 
     protected static int check_White=0;
@@ -22,6 +23,7 @@ public abstract class Piece {
     	this.x=-1000;
     	this.y=-1000;
     	this.color=-1000;
+    	this.move=0;
     	ech=null;
     }
     
@@ -65,6 +67,9 @@ public abstract class Piece {
     public void addWhite(){if(white<16)black+=1;}
     public void lessWhite(){if(white>1)black-=1;}
     
+    public int getMove(){
+    	return this.move;
+    }
 
     
     public abstract boolean Mouvement(int x,int y/*,Plateau tab*/);

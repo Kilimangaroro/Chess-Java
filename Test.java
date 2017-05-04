@@ -1,66 +1,97 @@
 
 public class Test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws BadIdException, BadXYException {
 		
 		
-		Plateau Echequier= new Plateau();
+		new Plateau();
 		
-		Piece p = new Fou(26);
-		Piece z= new Tour(1);
-		Piece y= new Tour(7);
+		Piece z= new Cavalier(66);
+		
+		Piece zer=new Pion(13,4,4);
+		Piece zer2=new Pion(17,2,5);
+
+		zer2.Mouvement(5,4);
 
 		Plateau.affichageTab();
-		Plateau.affichageTab(1);
-		Plateau.affichageTab(7);
+		Plateau.affichageTab(13);
+		Plateau.affichageTab(17);
 		Plateau.affichageTab(26);
+		
+		zer.Mouvement(5, 5);
+		z.Mouvement(2, 5);
+		
+		Plateau.affichageTab();
+		Plateau.affichageTab(13);
+		Plateau.affichageTab(17);
+		Plateau.affichageTab(26);
+
+
+		
+		
+		
+		/*Plateau.affichageTab(3);
+		Plateau.affichageTab(28);
+		
+		f.Mouvement(7, 7);
+		
+		Plateau.affichageTab();
+		Plateau.affichageTab(1);
+
+		Plateau.affichageTab(3);
+		Plateau.affichageTab(28);*/
+		
+		/*Plateau.affichageTab();
+		Plateau.affichageTab(1);
+		Plateau.affichageTab(8);
+		Plateau.affichageTab(3);
 		
 		p.Mouvement(0,5);
 		
 		Plateau.affichageTab();
 		Plateau.affichageTab(1);
-		Plateau.affichageTab(7);
-		Plateau.affichageTab(26);
+		Plateau.affichageTab(8);
+		Plateau.affichageTab(3);
 		
 		z.Mouvement(0, 5);
 		
 		
 		Plateau.affichageTab();
 		Plateau.affichageTab(1);
-		Plateau.affichageTab(7);
-		Plateau.affichageTab(26);
+		Plateau.affichageTab(8);
+		Plateau.affichageTab(3);
 
 		z.Mouvement(7, 5);
 		
 		
 		Plateau.affichageTab();
 		Plateau.affichageTab(1);
-		Plateau.affichageTab(7);
-		Plateau.affichageTab(26);
+		Plateau.affichageTab(8);
+		Plateau.affichageTab(3);
 		
 		y.Mouvement(7, 5);
 		
 		
 		Plateau.affichageTab();
 		Plateau.affichageTab(1);
-		Plateau.affichageTab(7);
-		Plateau.affichageTab(26);
+		Plateau.affichageTab(8);
+		Plateau.affichageTab(3);
 		
 		y.Mouvement(0, 5);
 		
 		
 		Plateau.affichageTab();
 		Plateau.affichageTab(1);
-		Plateau.affichageTab(7);
-		Plateau.affichageTab(26);
+		Plateau.affichageTab(8);
+		Plateau.affichageTab(3);
 		
 		z.Mouvement(7, 0);
 		
 		
 		Plateau.affichageTab();
 		Plateau.affichageTab(1);
-		Plateau.affichageTab(7);
-		Plateau.affichageTab(26);
+		Plateau.affichageTab(8);
+		Plateau.affichageTab(3);*/
 		
 		
 		
